@@ -1,0 +1,6 @@
+google-generativeai==0.8.3
+python-dotenv==1.0.1
+matplotlib==3.9.2
+numpy==2.1.1
+pathlib 
+regex  
