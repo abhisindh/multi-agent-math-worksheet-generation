@@ -1,0 +1,86 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{worksheet}[2025/08/29 Worksheet template]
+
+% ---------------- Required packages ----------------
+\RequirePackage{amsmath, amssymb}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{lmodern}
+\RequirePackage{tikz}
+\RequirePackage{eso-pic}
+\RequirePackage[a4paper, margin=0.5in]{geometry}
+\RequirePackage{enumitem}
+\RequirePackage{tabularx}
+\RequirePackage{titlesec}
+\RequirePackage{parskip}
+\RequirePackage{graphicx} % for logo/header image
+
+% ---------------- Page border ----------------
+\newcommand{\pageborder}{%
+  \begin{tikzpicture}[remember picture, overlay]
+    \draw[line width=1pt, black]
+      (current page.south west) ++(0.03in, 0.03in)
+      rectangle
+      (current page.north east) ++(-0.3in, -0.3in);
+  \end{tikzpicture}
+}
+\AddToShipoutPictureFG{\pageborder}
+
+% ---------------- Section spacing ----------------
+\titlespacing*{\section}{0pt}{6pt}{6pt}
+\titlespacing*{\subsection}{0pt}{4pt}{4pt}
+
+% ---------------- Worksheet Header ----------------
+% Placeholders
+\newcommand{\subjectname}{}
+\newcommand{\classname}{}
+\newcommand{\worksheettitle}{}
+\newcommand{\anskey}{}
+
+% User sets values via these commands
+\newcommand{\setsubject}[1]{\renewcommand{\subjectname}{#1}}
+\newcommand{\setclass}[1]{\renewcommand{\classname}{#1}}
+\newcommand{\setworksheettitle}[1]{\renewcommand{\worksheettitle}{#1}}
+\newcommand{\setanskey}[1]{\renewcommand{\anskey}{#1}}
+
+% Header generator
+\newcommand{\makeworksheetheader}{%
+  \noindent\includegraphics[width=\textwidth]{school_header.png}  % Note: Provide school_header.png or comment out
+  \noindent
+  \makebox[\linewidth]{%
+    \begin{tabular}{lcr}
+      \textbf{SUBJECT:} \subjectname & \hspace{2cm} \classname \hspace{2cm} & \textbf{\worksheettitle} \\
+      \textbf{Name:} & Fortnight 3 &  \\  % Note: "Fortnight 3" is hardcoded; customize as needed
+    \end{tabular}
+  }
+  \par\hrule
+}
+
+% ---------------- MCQ option formatting ---------------- 
+\makeatletter
+\newlength{\optionwidth}
+\newcommand{\measureoption}[1]{\settowidth{\optionwidth}{#1}}
+\newcommand{\equidistantoptions}[4]{%
+  \par
+  \measureoption{#1}\setlength{\@tempdima}{\optionwidth}
+  \measureoption{#2}\ifdim\optionwidth>\@tempdima \setlength{\@tempdima}{\optionwidth}\fi
+  \measureoption{#3}\ifdim\optionwidth>\@tempdima \setlength{\@tempdima}{\optionwidth}\fi
+  \measureoption{#4}\ifdim\optionwidth>\@tempdima \setlength{\@tempdima}{\optionwidth}\fi
+  
+  \ifdim 4\dimexpr\@tempdima+10pt\relax<\linewidth
+    \begin{tabular}{@{}p{0.25\textwidth} @{}p{0.25\textwidth} @{}p{0.25\textwidth} @{}p{0.25\textwidth} @{}}
+      A #1 & B #2 & C #3 & D #4 \\
+    \end{tabular}
+  \else
+    \ifdim 2\dimexpr\@tempdima+10pt\relax<\linewidth
+      \begin{tabular}{@{}p{0.5\textwidth} @{}p{0.5\textwidth} @{}}
+        A #1 & B #2 \\
+        C #3 & D #4 \\
+      \end{tabular}
+    \else
+      \begin{tabular}{@{}p{\linewidth} @{}}
+        A #1 \\ B #2 \\ C #3 \\ D #4 \\
+      \end{tabular}
+    \fi
+  \fi
+}
+\makeatother
